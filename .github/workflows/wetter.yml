@@ -18,7 +18,7 @@ jobs:
 
       - name: HTML-Datei erstellen
         run: |
-          cat <<EOF > index.html
+          cat > index.html << EOF
           <!DOCTYPE html>
           <html lang="de">
           <head>
@@ -27,46 +27,66 @@ jobs:
             <title>Garten Wetterstation</title>
             <style>
               body {
-                font-family: sans-serif;
-                text-align: center;
+                font-family: Arial, sans-serif;
                 background: #f4f7f6;
-                margin-top: 50px;
+                text-align: center;
+                padding: 50px;
               }
+
               .card {
                 background: white;
                 padding: 30px;
                 border-radius: 15px;
                 display: inline-block;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
               }
+
               h1 {
                 color: #333;
               }
+
               .temp {
                 font-size: 48px;
                 color: #ff5722;
                 font-weight: bold;
-                margin: 15px 0;
+                margin: 20px 0;
               }
+
               .info {
-                font-size: 18px;
+                font-size: 20px;
                 color: #555;
-                margin: 5px 0;
+                margin: 10px 0;
               }
             </style>
           </head>
           <body>
             <div class="card">
-              <h1>Garten Wetterstation</h1>
-              <div class="temp">${{ github.event.client_payload.temperatur }}°C</div>
-              <div class="info">💧 Luftfeuchtigkeit: ${{ github.event.client_payload.luftfeuchtigkeit }}%</div>
-              <div class="info">💨 Windgeschwindigkeit: ${{ github.event.client_payload.windgeschwindigkeit }} km/h</div>
+              <h1>🌦 Garten Wetterstation</h1>
+
+              <div class="temp">
+                ${{ github.event.client_payload.temperatur }} °C
+              </div>
+
+              <div class="info">
+                💧 Luftfeuchtigkeit:
+                ${{ github.event.client_payload.luftfeuchtigkeit }} %
+              </div>
+
+              <div class="info">
+                💨 Wind:
+                ${{ github.event.client_payload.windgeschwindigkeit }} km/h
+              </div>
+
+              <div class="info">
+                Letzte Aktualisierung:
+                $(date '+%d.%m.%Y %H:%M:%S')
+              </div>
             </div>
           </body>
           </html>
           EOF
 
-      - name: Änderungen committen und pushen
+      - name: Commit und Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Wetter-Update von HAOS"
