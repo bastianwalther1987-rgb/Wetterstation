@@ -24,7 +24,8 @@ jobs:
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-           <title>Bastians Wetterstation | Steinach bei Rothenburg</title>
+            <title>Bastians Wetterstation | Steinach bei Rothenburg</title>
+
             <style>
               body {
                 font-family: Arial, sans-serif;
@@ -43,6 +44,14 @@ jobs:
 
               h1 {
                 color: #333;
+                margin-bottom: 5px;
+              }
+
+              .ort {
+                color: #666;
+                font-size: 18px;
+                margin-top: 0;
+                margin-bottom: 25px;
               }
 
               .temp {
@@ -59,9 +68,12 @@ jobs:
               }
             </style>
           </head>
+
           <body>
             <div class="card">
-              <h1>🌦 Garten Wetterstation</h1>
+
+              <h1>🌦 Bastians Wetterstation</h1>
+              <p class="ort">📍 Steinach bei Rothenburg ob der Tauber</p>
 
               <div class="temp">
                 ${{ github.event.client_payload.temperatur }} °C
@@ -78,9 +90,10 @@ jobs:
               </div>
 
               <div class="info">
-                Letzte Aktualisierung:
+                Stand:
                 $(TZ='Europe/Berlin' date '+%d.%m.%Y %H:%M Uhr')
               </div>
+
             </div>
           </body>
           </html>
