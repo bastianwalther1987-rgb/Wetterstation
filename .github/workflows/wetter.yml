@@ -1,9 +1,13 @@
+
 name: Wetter-Webseite bauen
 
 on:
   repository_dispatch:
     types:
       - wetter_update
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -12,6 +16,7 @@ jobs:
     steps:
       - name: Code auschecken
         uses: actions/checkout@v4
+
 
       - name: HTML-Datei erstellen
         run: |
