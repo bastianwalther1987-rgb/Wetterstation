@@ -1,15 +1,25 @@
-name: Wetter-Webseite bauen
+name: Wetter-Webseite bauen und deployen
 
 on:
   repository_dispatch:
     types:
       - wetter_update
+  workflow_dispatch: # Ermöglicht es dir, den Workflow testweise manuell zu starten
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
@@ -117,8 +127,14 @@ jobs:
           </html>
           EOF
 
-      - name: Commit und Push
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Webseiten-Ordner für Pages vorbereiten
+        uses: actions/configure-pages@v5
+
+      - name: Artefakt hochladen
+        uses: actions/upload-pages-artifact@v3
         with:
-          commit_message: "Wetter-Update von HAOS"
-          file_pattern: index.html
+          path: '.' # Lädt den gesamten Ordner inklusive css/ und projekte/ hoch
+
+      - name: Auf GitHub Pages veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v4
