@@ -105,15 +105,13 @@ jobs:
               <div class="projekte">
                 <h2>🚀 Weitere Projekte</h2>
 
-                " class="projekt-link">
-                  🏠 Smart Home
-                </a>
+                projekte/smart-home.html
 
-                projekte/pv-anlage.html class="projekt-link">
+                projekte/pv-anlage.html
                   ☀️ PV-Anlage
                 </a>
 
-                projekte/fotos.htmlprojekt-link">
+                projekte/fotos.html
                   📷 Bildergalerie
                 </a>
               </div>
