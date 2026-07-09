@@ -1,139 +1,186 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bastians Wetterstation | Steinach bei Rothenburg</title>
+name: Wetter-Webseite bauen
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7f6;
-      margin: 0;
-      padding: 30px;
-      text-align: center;
-    }
+on:
+  repository_dispatch:
+    types:
+      - wetter_update
 
-    .card {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.15);
-    }
+permissions:
+  contents: write
 
-    h1 {
-      margin-bottom: 5px;
-      color: #333;
-    }
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    .ort {
-      color: #666;
-      margin-bottom: 25px;
-    }
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
 
-    .temp {
-      font-size: 56px;
-      font-weight: bold;
-      color: #ff5722;
-      margin-bottom: 30px;
-    }
+      - name: HTML-Datei erstellen
+        run: |
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="de">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Bastians Wetterstation | Steinach bei Rothenburg</title>
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                background: #f4f7f6;
+                margin: 0;
+                padding: 30px;
+                text-align: center;
+              }
 
-    .info {
-      background: #f7f8fa;
-      border-radius: 10px;
-      padding: 15px;
-      font-size: 18px;
-    }
+              .card {
+                max-width: 700px;
+                margin: auto;
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                box-shadow: 0 4px 12px rgba(0,0,0,.15);
+              }
 
-    .label {
-      color: #666;
-      margin-bottom: 5px;
-    }
+              h1 {
+                margin-bottom: 5px;
+                color: #333;
+              }
 
-    .value {
-      font-weight: bold;
-      color: #222;
-    }
+              .ort {
+                color: #666;
+                margin-bottom: 25px;
+              }
 
-    .stand {
-      margin-top: 25px;
-      color: #666;
-    }
+              .temp {
+                font-size: 56px;
+                font-weight: bold;
+                color: #ff5722;
+                margin-bottom: 30px;
+              }
 
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
+              .grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+              }
 
-<body>
-  <div class="card">
+              .info {
+                background: #f7f8fa;
+                border-radius: 10px;
+                padding: 15px;
+                font-size: 18px;
+              }
 
-    <h1>🌦 Bastians Wetterstation</h1>
-    <div class="ort">📍 Steinach bei Rothenburg ob der Tauber</div>
+              .label {
+                color: #666;
+                margin-bottom: 5px;
+              }
 
-    <div class="temp">
-      ${{ github.event.client_payload.temperatur }} °C
-    </div>
+              .value {
+                font-weight: bold;
+                color: #222;
+              }
 
-    <div class="grid">
+              .stand {
+                margin-top: 25px;
+                color: #666;
+                font-size: 16px;
+              }
 
-      <div class="info">
-        <div class="label">💧 Luftfeuchtigkeit</div>
-        <div class="value">${{ github.event.client_payload.luftfeuchtigkeit }} %</div>
-      </div>
+              @media (max-width: 600px) {
+                .grid {
+                  grid-template-columns: 1fr;
+                }
+              }
+            </style>
+          </head>
 
-      <div class="info">
-        <div class="label">🌬 Wind</div>
-        <div class="value">${{ github.event.client_payload.windgeschwindigkeit }} km/h</div>
-      </div>
+          <body>
+            <div class="card">
 
-      <div class="info">
-        <div class="label">🌪 Böen</div>
-        <div class="value">${{ github.event.client_payload.boengeschwindigkeit }} km/h</div>
-      </div>
+              <h1>🌦 Bastians Wetterstation</h1>
+              <div class="ort">
+                📍 Steinach bei Rothenburg ob der Tauber
+              </div>
 
-      <div class="info">
-        <div class="label">🧭 Windrichtung</div>
-        <div class="value">${{ github.event.client_payload.windrichtung }}</div>
-      </div>
+              <div class="temp">
+                ${{ github.event.client_payload.temperatur }} °C
+              </div>
 
-      <div class="info">
-        <div class="label">📈 Luftdruck</div>
-        <div class="value">${{ github.event.client_payload.druck }} hPa</div>
-      </div>
+              <div class="grid">
 
-      <div class="info">
-        <div class="label">☀️ UV-Index</div>
-        <div class="value">${{ github.event.client_payload.uv_index }}</div>
-      </div>
+                <div class="info">
+                  <div class="label">💧 Luftfeuchtigkeit</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.luftfeuchtigkeit }} %
+                  </div>
+                </div>
 
-      <div class="info">
-        <div class="label">💡 Helligkeit</div>
-        <div class="value">${{ github.event.client_payload.beleuchtungsstarke }} lx</div>
-      </div>
+                <div class="info">
+                  <div class="label">🌬 Wind</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.windgeschwindigkeit }} km/h
+                  </div>
+                </div>
 
-      <div class="info">
-        <div class="label">🌧 Regen heute</div>
-        <div class="value">${{ github.event.client_payload.regen_heute }} mm</div>
-      </div>
+                <div class="info">
+                  <div class="label">🌪 Böen</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.boengeschwindigkeit }} km/h
+                  </div>
+                </div>
 
-    </div>
+                <div class="info">
+                  <div class="label">🧭 Windrichtung</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.windrichtung }}
+                  </div>
+                </div>
 
-    <div class="stand">
-      🕒 ${{ github.event.client_payload.zeit }}
-    </div>
+                <div class="info">
+                  <div class="label">📈 Luftdruck</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.druck }} hPa
+                  </div>
+                </div>
 
-  </div>
-</body>
-</html>
+                <div class="info">
+                  <div class="label">☀️ UV-Index</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.uv_index }}
+                  </div>
+                </div>
+
+                <div class="info">
+                  <div class="label">💡 Helligkeit</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.beleuchtungsstarke }} lx
+                  </div>
+                </div>
+
+                <div class="info">
+                  <div class="label">🌧 Regen heute</div>
+                  <div class="value">
+                    ${{ github.event.client_payload.regen_heute }} mm
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="stand">
+                🕒 ${{ github.event.client_payload.zeit }}
+              </div>
+
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Commit und Push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Wetter-Update von HAOS"
+          file_pattern: index.html
